@@ -43,7 +43,8 @@ def movie_endpoint():
 def movie_recomendations_endpoint():
     session = get_session()
     repo = repository.MovieRepository(session)
-    # repo.list() not recognizing Movie table
+    preferenceKey = request.json["preferenceKey"]
+    recomendations = repo.list()
     return "recomendations", 200
 
 

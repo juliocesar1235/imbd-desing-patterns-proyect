@@ -5,24 +5,15 @@ from dataclasses import dataclass
 from sqlalchemy import create_engine
 
 
+@dataclass(unsafe_hash=True)
 class Movie:
-    def __init__(
-            self,
-            preferencekey: int,
-            movietitle: str,
-            rating: float,
-            year: int,
-            place: int,
-            vote: int,
-            link: str
-    ):
-        self.preferencekey = preferencekey
-        self.movietitle = movietitle
-        self.rating = rating
-        self.year = year
-        self.place = place
-        self.vote = vote
-        self.link = link
+    preference_key = int
+    movie_title = str
+    rating = float
+    year = int
+    place = int
+    vote = int
+    link = str
 
     def __repr__(self):
         return f"<Movie {self.movietitle}>"
