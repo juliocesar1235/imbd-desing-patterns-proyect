@@ -43,7 +43,7 @@ def movie_endpoint():
 def movie_recomendations_endpoint():
     session = get_session()
     repo = repository.MovieRepository(session)
-    print(repo.list())
+    # repo.list() not recognizing Movie table
     return "recomendations", 200
 
 
