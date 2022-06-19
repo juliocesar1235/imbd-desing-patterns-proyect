@@ -12,7 +12,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
 
-class SqlAlchemyRepository(AbstractRepository):
+class MovieRepository(AbstractRepository):
     def __init__(self, session):
         self.session = session
 

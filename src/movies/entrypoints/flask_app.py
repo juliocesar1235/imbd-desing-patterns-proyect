@@ -8,9 +8,6 @@ import orm
 import models
 import repository as repository
 
-
-orm.start_mappers()
-get_session = sessionmaker(bind=create_engine(config.get_postgres_uri()))
 app = Flask(__name__)
 
 
@@ -22,7 +19,7 @@ def hello_world():
 @app.route("/create-movie", methods=["POST"])
 def movie_endpoint():
     session = get_session()
-    repo = repository.SqlAlchemyRepository(session)
+    repo = repository.MovieRepository(session)
     movie = models.Movie(
         request.json["preferenceKey"],
         request.json["movieTitle"],
@@ -32,6 +29,7 @@ def movie_endpoint():
         request.json["vote"],
         request.json["link"],
     )
+    repo.add(movie)
     response = {
         "movieTitle": movie.movietitle,
         "rating": movie.rating,
@@ -44,6 +42,10 @@ def movie_endpoint():
 @app.route("/recomendations", methods=["GET"])
 def movie_recomendations_endpoint():
     session = get_session()
-    repo = repository.SqlAlchemyRepository(session)
+    repo = repository.MovieRepository(session)
     print(repo.list())
     return "recomendations", 200
+
+
+orm.start_mappers()
+get_session = sessionmaker(bind=create_engine(config.get_postgres_uri()))
