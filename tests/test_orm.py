@@ -1,23 +1,28 @@
-def test_orderline_mapper_can_load_movies(session):  # (1)
+import models
+
+
+def test_mapper_can_load_movies(session):  # (1)
     session.execute(
-        "INSERT INTO movies (preferenceKey,movieTitle,rating) VALUES "
-        '(1, "El hoyo", 8.2),'
-        '(2, "Terremoto", 4.1),'
-        '(3, "Avengers", 9.4),'
+        "INSERT INTO movies (preferenceKey,movieTitle,rating,year,place,vote,link) VALUES "
+        '(1,"Sueño de fuga,Frank Darabont (dir.), Tim Robbins, Morgan Freeman",9.239903039104593,1994,1,NULL,"/title/tt0111161/"),'
+        '(4,"El padrino II,Francis Ford Coppola (dir.), Al Pacino, Robert De Niro",8.99012508760967,1974,4,NULL,"/title/tt0071562/"),'
     )
     expected = [
-        model.Movie(1, "El hoyo", 8.2),
-        model.Movie(2, "Terremoto", 4.1),
-        model.Movie(3, "Avengers", 9.4),
+        models.Movie(1, "Sueño de fuga,Frank Darabont (dir.), Tim Robbins, Morgan Freeman",
+                     9.239903039104593, 1994, 1, NULL, "/title/tt0111161/"),
+        models.Movie(4, "El padrino II,Francis Ford Coppola (dir.), Al Pacino, Robert De Niro",
+                     8.99012508760967, 1974, 4, NULL, "/title/tt0071562/"),
     ]
-    assert session.query(model.Movie).all() == expected
+    assert session.query(models).all() == expected
 
 
-def test_orderline_mapper_can_save_movies(session):
-    new_movie = model.Movie(1, "Midsomar", 6.3)
+def test_mapper_can_save_movies(session):
+    new_movie = models.Movie(1, "El origen,Christopher Nolan (dir.), Leonardo DiCaprio, Joseph Gordon-Levitt",
+                             8.743839456695438, 2010, 13, NULL, "/title/tt1375666/")
     session.add(new_movie)
     session.commit()
 
     rows = list(session.execute(
         'SELECT preferenceKey,movieTitle,rating FROM "movies"'))
-    assert rows == [(1, "Midsomar", 6.3)]
+    assert rows == [(1, "El origen,Christopher Nolan (dir.), Leonardo DiCaprio, Joseph Gordon-Levitt",
+                     8.743839456695438)]

@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "/Users/juliocesargutierrez/.pyenv/versions/3.8.10/bin/python",
+    "python.analysis.extraPaths": [
+        "./src/movies"
+    ]
+}
