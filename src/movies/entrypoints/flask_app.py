@@ -12,6 +12,7 @@ from repository import MovieRepository
 session = orm.start_mappers()
 
 app = Flask(__name__, instance_relative_config=True)
+movieRepo = MovieRepository(session)
 
 
 @app.route("/hello", methods=["GET"])
@@ -21,7 +22,7 @@ def hello_world():
 
 @app.route("/create-movie", methods=["POST"])
 def movie_endpoint():
-    repo = MovieRepository(session)
+    repo = movieRepo
     # print(request.json)
     moviek = models.Movie(
         preference_key=request.json["preference_key"],
@@ -40,7 +41,7 @@ def movie_endpoint():
 @ app.route("/recomendations", methods=["GET"])
 def movie_recomendations_endpoint():
     preferenceKey = request.json["preference_key"]
-    movieRepo = MovieRepository(session)
-    lm = movieRepo.list()
+    repo = movieRepo
+    lm = repo.list()
     print(lm)
     return jsonify(lm), 200
