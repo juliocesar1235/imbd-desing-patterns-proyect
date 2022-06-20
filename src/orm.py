@@ -1,5 +1,4 @@
-from sqlite3 import Date
-from sqlalchemy import Table, MetaData, Column, Integer, String, Float, create_engine
+from sqlalchemy import Table, MetaData, Column, Integer, String, Float, create_engine, TIMESTAMP
 from sqlalchemy.orm import mapper, sessionmaker, Session
 
 import models
@@ -23,6 +22,7 @@ movies = Table(
     Column("place", Integer),
     Column("vote", Integer),
     Column("link", String(255)),
+    Column("create_time", TIMESTAMP(timezone=True), index=True)
 )
 
 

@@ -33,3 +33,6 @@ class Movie:
         self.place = place
         self.vote = vote
         self.link = link
+
+    def __post_init__(self):
+        self.create_time = datetime.now
