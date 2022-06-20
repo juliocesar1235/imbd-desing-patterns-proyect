@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, g
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import json
@@ -6,9 +6,12 @@ import json
 import config
 import orm
 import models
-import repository as repository
+from repository import MovieRepository
 
-app = Flask(__name__)
+
+session = orm.start_mappers()
+
+app = Flask(__name__, instance_relative_config=True)
 
 
 @app.route("/hello", methods=["GET"])
@@ -18,34 +21,26 @@ def hello_world():
 
 @app.route("/create-movie", methods=["POST"])
 def movie_endpoint():
-    session = get_session()
-    repo = repository.MovieRepository(session)
-    movie = models.Movie(
-        request.json["preferenceKey"],
-        request.json["movieTitle"],
-        request.json["rating"],
-        request.json["year"],
-        request.json["place"],
-        request.json["vote"],
-        request.json["link"],
+    repo = MovieRepository(session)
+    # print(request.json)
+    moviek = models.Movie(
+        preference_key=request.json["preference_key"],
+        movie_title=request.json["movie_title"],
+        rating=request.json["rating"],
+        year=request.json["year"],
+        place=request.json["place"],
+        vote=request.json["vote"],
+        link=request.json["link"],
     )
-    repo.add(movie)
-    response = {
-        "movieTitle": movie.movietitle,
-        "rating": movie.rating,
-        "year": movie.year,
-        "link": movie.link
-    }
-    return response, 200
+    #print(movie.__repr__, "model")
+    newMovie = repo.create(moviek)
+    return jsonify(newMovie.movie_title, newMovie.rating), 200
 
 
-@app.route("/recomendations", methods=["GET"])
+@ app.route("/recomendations", methods=["GET"])
 def movie_recomendations_endpoint():
-    session = get_session()
-    repo = repository.MovieRepository(session)
-    # repo.list() not recognizing Movie table
-    return "recomendations", 200
-
-
-orm.start_mappers()
-get_session = sessionmaker(bind=create_engine(config.get_postgres_uri()))
+    preferenceKey = request.json["preference_key"]
+    movieRepo = MovieRepository(session)
+    lm = movieRepo.list()
+    print(lm)
+    return jsonify(lm), 200

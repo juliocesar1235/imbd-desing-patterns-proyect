@@ -1,8 +1,15 @@
-from sqlalchemy import Table, MetaData, Column, Integer, String, Float
-from sqlalchemy.orm import mapper
+from sqlite3 import Date
+from sqlalchemy import Table, MetaData, Column, Integer, String, Float, create_engine
+from sqlalchemy.orm import mapper, sessionmaker, Session
 
-import models  # (1)
+import models
+import config
 
+
+engine = create_engine(
+    config.get_postgres_uri(),
+    isolation_level="REPEATABLE READ",
+)
 metadata = MetaData()
 
 movies = Table(
@@ -19,5 +26,7 @@ movies = Table(
 )
 
 
-def start_mappers():
+def start_mappers() -> Session:
     mapper(models.Movie, movies)
+    metadata.create_all(engine)
+    return sessionmaker(bind=engine)()
