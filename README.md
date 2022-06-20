@@ -21,7 +21,8 @@ docker-compose –-env-file config/dev.env exec postgres psql -h localhost -U mo
 docker-compose –-env-file config/dev.env rm -v postgres
 
 #You can access the project using the following url: 
-http://localhost:5005/hello
+http://localhost:5005/create-movie
+http://localhost:5005/recomendations
 ```
 
 <!-- TODO: use a make pipinstall command -->
